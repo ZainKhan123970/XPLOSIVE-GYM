@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — Xplosive Fitness</title>
+  
+  <!-- Fonts & Styling CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & Framer Motion CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --red: #e9222a;
+      --blue: #23abe3;
+      --blue-carousel: #62B2FE;
+      --ink: #ecf1f3;
+      --ink-muted: rgba(236,241,243,.62);
+      --line: rgba(236,241,243,.14);
+    }
+    
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* Background Grain Overlay */
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .05; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Hero Heading Gradient */
+    .hero-heading {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+      line-height: .94;
+      font-size: clamp(2.6rem, 8vw, 5.2rem);
+      background: linear-gradient(100deg, #ffffff 0%, var(--red) 46%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Eyebrow Styles */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-size: clamp(.7rem, 1.3vw, .85rem); letter-spacing: .28em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 1.1rem;
+    }
+    .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--red); }
+    .eyebrow::after { content: ""; width: 26px; height: 2px; background: var(--blue); }
+
+    /* CTA Button Styles */
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: .6rem;
+      border: none; border-radius: 999px; padding: .95rem 1.8rem;
+      background: linear-gradient(115deg, #7a1216 0%, var(--red) 45%, var(--blue) 100%);
+      color: #fff; font-family: 'Kanit', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; font-size: .82rem;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(233,34,42,.3);
+      transition: transform .15s ease, box-shadow .25s ease;
+    }
+    .cta-btn:hover {
+      box-shadow: 0 8px 24px -4px rgba(233,34,42,.5);
+      transform: translateY(-2px);
+    }
+    .cta-btn:active { transform: scale(.98); }
+  
+  /* ---------- main site navigation ---------- */
+  .mainnav{position:relative;z-index:20;margin:0 auto clamp(1rem,3vw,2rem);}
+  .mainnav-inner{
+    display:flex;align-items:center;justify-content:center;
+    gap:clamp(.1rem,.8vw,.45rem);
+    border:1.5px solid rgba(236,241,243,.14);
+    border-radius:999px;
+    padding:.45rem .55rem;
+    background:rgba(16,16,16,.65);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  }
+  .mainnav a{
+    display:inline-block;
+    padding:.62rem 1.05rem;
+    border-radius:999px;
+    font-family:'Kanit',sans-serif;
+    font-size:clamp(.64rem,1vw,.78rem);
+    font-weight:600;letter-spacing:.13em;text-transform:uppercase;
+    color:rgba(236,241,243,.6);
+    text-decoration:none;white-space:nowrap;
+    transition:color .2s ease, background .2s ease;
+  }
+  .mainnav a:hover{color:#ecf1f3;}
+  .mainnav a.active{
+    color:#fff;
+    background:linear-gradient(115deg,#7a1216 0%,#e9222a 55%,#ff3b43 100%);
+    box-shadow:0 6px 16px -6px rgba(233,34,42,.75), inset 0 1px 0 rgba(255,255,255,.28);
+  }
+  @media (max-width:900px){
+    .mainnav-inner{justify-content:flex-start;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;}
+    .mainnav-inner::-webkit-scrollbar{display:none;}
+  }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+
+    <div style="max-width:1180px;margin:0 auto;padding:1.25rem clamp(1rem,4vw,2rem) 0;">
+  <nav class="mainnav" aria-label="Main">
+    <div class="mainnav-inner">
+      <a href="index.html">Home</a>
+      <a href="xplosive-fitness-about.html">About Us</a>
+      <a href="xplosive-fitness-services.html" class="active">Services</a>
+      <a href="xplosive-fitness-products.html">Products</a>
+      <a href="xplosive-fitness-our-team.html">Our Team</a>
+      <a href="xplosive-fitness-pricing.html">Memberships</a>
+      <a href="xplosive-fitness-gallery.html">Gallery</a>
+      <a href="xplosive-fitness-reviews.html">Testimonials</a>
+      <a href="xplosive-fitness-contact.html">Contact Us</a>
+    </div>
+  </nav>
+  </div>
+
+<div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useCallback, useRef } = React;
+    const { motion, AnimatePresence } = window.Motion;
+
+    // Official Xplosive Emblem Icon SVG
+    const OfficialXplosiveEmblem = ({ className = "w-10 h-10" }) => (
+      <svg className={className} viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 25 C 35 25, 25 35, 25 50 C 25 65, 35 75, 50 75 C 58 75, 65 70, 72 62 C 82 80, 100 90, 122 86 C 93 97, 57 90, 43 65 C 32 47, 36 29, 50 25 Z" fill="#e9222a" />
+        <path d="M50 14 A 15 15 0 1 0 50 44 A 15 15 0 1 0 50 14 Z" fill="#e9222a" />
+        <circle cx="50" cy="29" r="5" fill="#000000" />
+        
+        <path d="M115 22 L158 87 L187 87 L144 22 Z" fill="#23abe3" />
+        <path d="M158 22 L115 87 L144 87 L187 22 Z" fill="#23abe3" />
+
+        <text x="5" y="130" fill="#23abe3" fontSize="28" fontWeight="900" fontFamily="Kanit, sans-serif" letterSpacing="1">XPLOSIVE</text>
+        <text x="52" y="158" fill="#e9222a" fontSize="24" fontWeight="900" fontFamily="Kanit, sans-serif" letterSpacing="3">FITNESS</text>
+      </svg>
+    );
+
+    // Canvas Poster Generator
+    const generateGymPosterImage = (mainTitle, subTitle, descText) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 1000;
+      const ctx = canvas.getContext('2d');
+
+      const bgGrad = ctx.createLinearGradient(0, 0, 800, 1000);
+      bgGrad.addColorStop(0, '#121216');
+      bgGrad.addColorStop(0.5, '#09090c');
+      bgGrad.addColorStop(1, '#040405');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 800, 1000);
+
+      ctx.fillStyle = '#e9222a';
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(340, 0);
+      ctx.lineTo(0, 170);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 64px Kanit, sans-serif';
+      ctx.textAlign = 'left';
+      
+      const words = mainTitle.toUpperCase().split(' ');
+      let yPos = 190;
+      words.forEach((word) => {
+        if (["AREA", "ZONE", "STATION", "CHALLENGE", "TRAINING", "GUARD", "ROOM", "FACILITIES", "SURVEILLANCE", "GENERATOR", "PARKING", "CONDITIONER"].includes(word)) {
+          ctx.fillStyle = '#e9222a';
+        } else {
+          ctx.fillStyle = '#ffffff';
+        }
+        ctx.fillText(word, 50, yPos);
+        yPos += 68;
+      });
+
+      ctx.fillStyle = '#e9222a';
+      ctx.fillRect(50, yPos, 200, 4);
+      yPos += 35;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 22px Kanit, sans-serif';
+      ctx.fillText(subTitle.toUpperCase(), 50, yPos);
+      yPos += 45;
+
+      ctx.fillStyle = '#d1d5db';
+      ctx.font = '400 17px Kanit, sans-serif';
+      const maxWidth = 350;
+      const lineHeight = 25;
+      const descWords = descText.split(' ');
+      let line = '';
+
+      for (let n = 0; n < descWords.length; n++) {
+        let testLine = line + descWords[n] + ' ';
+        let metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, 50, yPos);
+          line = descWords[n] + ' ';
+          yPos += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, 50, yPos);
+
+      ctx.fillStyle = '#e9222a';
+      ctx.font = '900 28px Kanit, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('XPLOSIVE', 750, 60);
+      ctx.fillStyle = '#23abe3';
+      ctx.font = '700 20px Kanit, sans-serif';
+      ctx.fillText('FITNESS', 750, 85);
+
+      ctx.fillStyle = '#e9222a';
+      ctx.fillRect(0, 920, 800, 80);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 18px Kanit, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SECTOR V, GULSHAN-E-MAYMAR | CALL/WHATSAPP: 0316 2603591', 400, 968);
+
+      return canvas.toDataURL('image/jpeg', 0.9);
+    };
+
+    // Services Array
+    const FEATURES = [
+      {
+        id: "free-weight",
+        label: "FREE WEIGHT AREA",
+        subtitle: "BUILD STRENGTH. LIFT WITH PURPOSE.",
+        image: generateGymPosterImage("Free Weight Area", "BUILD STRENGTH. LIFT WITH PURPOSE.", "Train with a complete range of dumbbells, barbells, and kettlebells designed to help you build strength, develop muscle, and improve overall performance."),
+        description: "Train with a complete range of dumbbells, barbells, and kettlebells designed to help you build strength, develop muscle, and improve overall performance.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6.5 6.5v11M17.5 6.5v11M2 9v6M22 9v6M6.5 12h11"/></svg>
+        )
+      },
+      {
+        id: "weight-lifting",
+        label: "WEIGHT LIFTING AREA",
+        subtitle: "TAKE YOUR STRENGTH TO THE NEXT LEVEL",
+        image: generateGymPosterImage("Weight Lifting Area", "TAKE YOUR STRENGTH TO THE NEXT LEVEL", "Push your limits with focused weight-training sessions designed to build strength, muscle, and power. From squats and deadlifts to bench presses."),
+        description: "Push your limits with focused weight-training sessions designed to build strength, muscle, and power. From squats and deadlifts to bench presses, rows, and shoulder presses.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
+        )
+      },
+      {
+        id: "cardio-zone",
+        label: "CARDIO ZONE",
+        subtitle: "BOOST YOUR ENDURANCE. BURN CALORIES.",
+        image: generateGymPosterImage("Cardio Zone", "BOOST YOUR ENDURANCE. BURN CALORIES.", "Push your limits with our premium cardio equipment, including treadmills, ellipticals, stationary bikes, and rowing machines."),
+        description: "Push your limits with our premium cardio equipment, including treadmills, ellipticals, stationary bikes, and rowing machines.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>
+        )
+      },
+      {
+        id: "cross-fit",
+        label: "CROSSFIT CHALLENGE",
+        subtitle: "TEST YOUR LIMITS. BECOME STRONGER.",
+        image: generateGymPosterImage("CrossFit Challenge", "TEST YOUR LIMITS. BECOME STRONGER.", "Push your limits with our fully equipped CrossFit training area featuring barbells, kettlebells, pull-up bars, battle ropes, and sandbags."),
+        description: "Push your limits with our fully equipped CrossFit training area, featuring barbells, kettlebells, pull-up bars, rowing machines, jump ropes, medicine balls, sandbags, and battling ropes.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        )
+      },
+      {
+        id: "leg-station",
+        label: "LEG EXERCISE STATION",
+        subtitle: "BUILD POWER. STRENGTHEN YOUR LEGS.",
+        image: generateGymPosterImage("Leg Exercise Station", "BUILD POWER. STRENGTHEN YOUR LEGS.", "Push your lower-body training further with dedicated equipment for leg presses, leg extensions, leg curls, and thigh exercises."),
+        description: "Push your lower-body training further with dedicated equipment for leg presses, leg extensions, leg curls, inner-thigh, and outer-thigh exercises.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="5" r="3"/><path d="M12 8v8l3 5M12 16l-3 5"/></svg>
+        )
+      },
+      {
+        id: "target-training",
+        label: "TARGET TRAINING",
+        subtitle: "FOCUS ON YOUR GOALS. SEE RESULTS.",
+        image: generateGymPosterImage("Target Training", "FOCUS ON YOUR GOALS. SEE RESULTS.", "Achieve your specific fitness goals with targeted training programs guided by experienced trainers."),
+        description: "Achieve your specific fitness goals with targeted training programs guided by experienced trainers. Whether you want to build strength, improve cardio, or lose weight.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        )
+      },
+      {
+        id: "personal-training",
+        label: "PERSONAL TRAINING",
+        subtitle: "EXPERT GUIDANCE. BETTER RESULTS.",
+        image: generateGymPosterImage("Personal Training", "EXPERT GUIDANCE. BETTER RESULTS.", "Get personalized fitness guidance from our expert trainers with workouts tailored to your goals and fitness level."),
+        description: "Get personalized fitness guidance from our expert trainers with workouts tailored to your goals, fitness level, and individual needs.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        )
+      },
+      {
+        id: "air-conditioner",
+        label: "AIR CONDITIONER",
+        subtitle: "STAY COOL. TRAIN HARD.",
+        image: generateGymPosterImage("Air Conditioner", "STAY COOL. TRAIN HARD.", "Enjoy a cool and comfortable workout environment that keeps you fresh, focused, and ready to push your limits."),
+        description: "Enjoy a cool and comfortable workout environment that keeps you fresh, focused, and ready to push your limits—even during intense training.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/></svg>
+        )
+      },
+      {
+        id: "generator",
+        label: "PRIVATE GYM GENERATOR",
+        subtitle: "RELIABLE POWER. UNINTERRUPTED TRAINING.",
+        image: generateGymPosterImage("Private Gym Generator", "RELIABLE POWER. UNINTERRUPTED TRAINING.", "Keep your fitness facility powered with a dedicated generator designed to support essential gym operations."),
+        description: "Keep your fitness facility powered with a dedicated generator designed to support essential gym operations during power interruptions.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M14 12h4M16 10v4"/></svg>
+        )
+      },
+      {
+        id: "parking",
+        label: "PRIVATE GYM PARKING",
+        subtitle: "PARK WITH EASE. TRAIN WITH PEACE OF MIND.",
+        image: generateGymPosterImage("Private Gym Parking", "PARK WITH EASE. TRAIN WITH PEACE.", "Enjoy the convenience of our designated private gym parking area. Arrive, park securely, and focus on your workout."),
+        description: "Enjoy the convenience of our designated private gym parking area. Arrive, park securely, and focus on your workout without hassle.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+        )
+      },
+      {
+        id: "cctv",
+        label: "CCTV SURVEILLANCE",
+        subtitle: "ADDED SECURITY. GREATER PEACE OF MIND.",
+        image: generateGymPosterImage("CCTV Surveillance", "ADDED SECURITY. GREATER PEACE OF MIND.", "Our gym is equipped with CCTV surveillance to help maintain a secure and monitored environment for all our members."),
+        description: "Our gym is equipped with CCTV surveillance to help maintain a secure and monitored environment for all our members.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        )
+      },
+      {
+        id: "security-guard",
+        label: "SECURITY GUARD",
+        subtitle: "YOUR SAFETY. OUR PRIORITY.",
+        image: generateGymPosterImage("Security Guard", "YOUR SAFETY. OUR PRIORITY.", "Enjoy a safer and more secure workout environment with our dedicated security guard on site."),
+        description: "Enjoy a safer and more secure workout environment with our dedicated security guard on site to provide peace of mind.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        )
+      },
+      {
+        id: "locker-room",
+        label: "LOCKER ROOM",
+        subtitle: "STORE YOUR BELONGINGS. STAY ORGANIZED.",
+        image: generateGymPosterImage("Locker Room", "STORE YOUR BELONGINGS. STAY ORGANIZED.", "Keep your personal belongings secure in our dedicated locker rooms, equipped with convenient storage for your essentials."),
+        description: "Keep your personal belongings secure in our dedicated locker rooms, equipped with convenient storage for your essentials.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>
+        )
+      },
+      {
+        id: "washroom",
+        label: "WASHROOM FACILITIES",
+        subtitle: "CLEAN SPACE. MODERN COMFORT.",
+        image: generateGymPosterImage("Washroom Facilities", "CLEAN SPACE. MODERN COMFORT.", "Enjoy a clean, modern, and comfortable environment designed to complement your fitness journey."),
+        description: "Enjoy a clean, modern, and comfortable washroom facility providing a fresh and hygienic space where you can refresh and recharge.",
+        icon: (
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6h6M12 6v12M6 18h12"/></svg>
+        )
+      }
+    ];
+
+    const AUTO_PLAY_INTERVAL = 3000;
+    const ITEM_HEIGHT = 65;
+
+    const wrap = (min, max, v) => {
+      const rangeSize = max - min;
+      return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
+    };
+
+    function FeatureCarousel() {
+      const [step, setStep] = useState(0);
+      const [isPaused, setIsPaused] = useState(false);
+      const [hoveredIndex, setHoveredIndex] = useState(null);
+      const [isExpanded, setIsExpanded] = useState(false);
+      
+      const hoverTimerRef = useRef(null);
+      const currentIndex = ((step % FEATURES.length) + FEATURES.length) % FEATURES.length;
+
+      const nextStep = useCallback(() => {
+        if (!isPaused && !isExpanded) {
+          setStep((prev) => prev + 1);
+        }
+      }, [isPaused, isExpanded]);
+
+      const handleChipClick = (index) => {
+        const diff = (index - currentIndex + FEATURES.length) % FEATURES.length;
+        if (diff > 0) setStep((s) => s + diff);
+      };
+
+      const handleMouseEnter = (index) => {
+        setIsPaused(true);
+        if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+        hoverTimerRef.current = setTimeout(() => {
+          setHoveredIndex(index);
+        }, 100);
+      };
+
+      const handleMouseLeave = () => {
+        setIsPaused(false);
+        if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+        setHoveredIndex(null);
+      };
+
+      useEffect(() => {
+        if (isPaused || isExpanded) return;
+        const interval = setInterval(nextStep, AUTO_PLAY_INTERVAL);
+        return () => clearInterval(interval);
+      }, [nextStep, isPaused, isExpanded]);
+
+      const getCardStatus = (index) => {
+        const diff = index - currentIndex;
+        const len = FEATURES.length;
+
+        let normalizedDiff = diff;
+        if (diff > len / 2) normalizedDiff -= len;
+        if (diff < -len / 2) normalizedDiff += len;
+
+        if (normalizedDiff === 0) return "active";
+        if (normalizedDiff === -1) return "prev";
+        if (normalizedDiff === 1) return "next";
+        return "hidden";
+      };
+
+      return (
+        <div className="w-full max-w-7xl mx-auto my-6 relative z-10">
+          
+          <div className={`relative overflow-hidden rounded-[2.5rem] lg:rounded-[3.5rem] flex flex-col lg:flex-row min-h-[600px] lg:aspect-video border border-white/10 bg-[#101010] shadow-2xl transition-all duration-500 ${isExpanded ? 'filter blur-md scale-[0.98] pointer-events-none' : ''}`}>
+            
+            {/* Left Column Vertical Menu - Original Blue Theme (#62B2FE) */}
+            <div className="w-full lg:w-[40%] min-h-[350px] md:min-h-[450px] lg:h-full relative z-30 flex flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:pl-12 bg-[#62B2FE]">
+              <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#62B2FE] via-[#62B2FE]/80 to-transparent z-40 pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#62B2FE] via-[#62B2FE]/80 to-transparent z-40 pointer-events-none" />
+              
+              <div className="relative w-full h-full flex items-center justify-center lg:justify-start z-20">
+                {FEATURES.map((feature, index) => {
+                  const isActive = index === currentIndex;
+                  const isHovered = index === hoveredIndex;
+                  const distance = index - currentIndex;
+                  const wrappedDistance = wrap(
+                    -(FEATURES.length / 2),
+                    FEATURES.length / 2,
+                    distance
+                  );
+
+                  return (
+                    <motion.div
+                      key={feature.id}
+                      style={{
+                        height: ITEM_HEIGHT,
+                        width: "fit-content",
+                      }}
+                      animate={{
+                        y: wrappedDistance * ITEM_HEIGHT,
+                        opacity: 1 - Math.abs(wrappedDistance) * 0.25,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 90,
+                        damping: 22,
+                        mass: 1,
+                      }}
+                      className="absolute flex items-center justify-start"
+                    >
+                      <button
+                        onClick={() => handleChipClick(index)}
+                        onMouseEnter={() => handleMouseEnter(index)}
+                        onMouseLeave={handleMouseLeave}
+                        className={`relative flex items-center gap-4 px-6 md:px-8 py-3.5 rounded-full transition-all duration-300 text-left group border ${
+                          isActive
+                            ? "bg-white text-[#62B2FE] border-white z-10 shadow-xl scale-105"
+                            : isHovered
+                            ? "bg-white/20 text-white border-white/50 scale-102"
+                            : "bg-transparent text-white/60 border-white/20 hover:border-white/40 hover:text-white"
+                        }`}
+                      >
+                        <div className={`flex items-center justify-center transition-colors ${isActive ? 'text-[#62B2FE]' : 'text-white'}`}>
+                          {feature.icon}
+                        </div>
+                        <span className="font-semibold text-xs md:text-sm tracking-tight whitespace-nowrap uppercase">
+                          {feature.label}
+                        </span>
+                      </button>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right Card Display Stack */}
+            <div className="flex-1 min-h-[500px] md:min-h-[600px] lg:h-full relative bg-secondary/30 flex items-center justify-center py-12 px-6 md:px-12 overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
+              <div className="relative w-full max-w-[420px] aspect-[4/5] flex items-center justify-center">
+                {FEATURES.map((feature, index) => {
+                  const status = getCardStatus(index);
+                  const isActive = status === "active";
+                  const isPrev = status === "prev";
+                  const isNext = status === "next";
+                  const isHovered = hoveredIndex === index;
+
+                  return (
+                    <motion.div
+                      key={feature.id}
+                      initial={false}
+                      animate={{
+                        x: isActive ? 0 : isPrev ? -100 : isNext ? 100 : 0,
+                        scale: isActive ? (isHovered ? 1.03 : 1) : isPrev || isNext ? 0.85 : 0.7,
+                        opacity: isActive ? 1 : isPrev || isNext ? 0.4 : 0,
+                        rotate: isPrev ? -3 : isNext ? 3 : 0,
+                        zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
+                        pointerEvents: isActive ? "auto" : "none",
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 260,
+                        damping: 25,
+                        mass: 0.8,
+                      }}
+                      onClick={() => isActive && setIsExpanded(true)}
+                      onMouseEnter={() => handleMouseEnter(index)}
+                      onMouseLeave={handleMouseLeave}
+                      className="absolute inset-0 rounded-[2rem] md:rounded-[2.8rem] overflow-hidden border-4 md:border-8 border-[#121212] bg-[#121212] origin-center cursor-pointer shadow-2xl group"
+                    >
+                      <img
+                        src={feature.image}
+                        alt={feature.label}
+                        className={`w-full h-full object-cover transition-all duration-500 ${
+                          isActive
+                            ? isHovered ? "grayscale-0 scale-105" : "grayscale-0"
+                            : "grayscale blur-[2px] brightness-75"
+                        }`}
+                      />
+
+                      <AnimatePresence>
+                        {isActive && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            className="absolute inset-x-0 bottom-0 p-8 pt-24 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end pointer-events-none"
+                          >
+                            <div className="bg-[#e9222a] text-white px-3.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest w-fit shadow-lg mb-2">
+                              {index + 1} • {feature.label}
+                            </div>
+                            <h3 className="text-white font-bold text-lg md:text-xl leading-tight drop-shadow-md tracking-tight mb-2">
+                              {feature.subtitle}
+                            </h3>
+                            <p className="text-white/80 font-light text-xs md:text-sm line-clamp-3 leading-relaxed">
+                              {feature.description}
+                            </p>
+                            <div className="mt-3 flex items-center gap-2 text-[#23abe3] text-xs font-semibold uppercase tracking-wider">
+                              <span>Click to Expand</span>
+                              <span>→</span>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      <div className={`absolute top-6 left-6 flex items-center gap-2.5 transition-opacity duration-300 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className="w-2 h-2 rounded-full bg-[#e9222a] shadow-[0_0_8px_#e9222a]" />
+                        <span className="text-white/90 text-[10px] font-semibold uppercase tracking-widest">
+                          XPLOSIVE FITNESS
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Full Screen Frozen Modal Effect */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-xl"
+                onClick={() => setIsExpanded(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.85, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.85, y: 20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  className="relative w-full max-w-4xl bg-[#101010] border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={() => setIsExpanded(false)}
+                    className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/70 border border-white/20 text-white flex items-center justify-center text-xl hover:bg-[#e9222a] transition-colors"
+                  >
+                    ✕
+                  </button>
+
+                  <div className="w-full md:w-1/2 h-64 md:h-auto relative bg-black">
+                    <img
+                      src={FEATURES[currentIndex].image}
+                      alt={FEATURES[currentIndex].label}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#101010] via-transparent to-transparent" />
+                  </div>
+
+                  <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-[#101010]">
+                    <div className="flex items-center gap-2 mb-3 text-[#23abe3]">
+                      {FEATURES[currentIndex].icon}
+                      <span className="font-bold text-xs tracking-widest uppercase">Service Details</span>
+                    </div>
+
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tight mb-2">
+                      {FEATURES[currentIndex].label}
+                    </h2>
+
+                    <p className="text-[#e9222a] font-bold text-sm uppercase tracking-wide mb-4">
+                      {FEATURES[currentIndex].subtitle}
+                    </p>
+
+                    <p className="text-gray-300 text-sm leading-relaxed mb-6 font-light">
+                      {FEATURES[currentIndex].description}
+                    </p>
+
+                    <a
+                      href="https://wa.me/923162603591?text=Hi%20Xplosive%20Fitness%2C%20I%27d%20like%20to%20know%20more%20about%20your%20services."
+                      target="_blank"
+                      rel="noreferrer"
+                      className="cta-btn justify-center text-center w-full"
+                    >
+                      Ask about a service
+                    </a>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <div className="max-w-[1180px] mx-auto px-4 md:px-8 py-4">
+          
+          {/* Circular Logo Container Header & Slightly Smaller Title Font */}
+          <header className="relative z-10 flex items-center justify-between py-6">
+            <div className="flex items-center gap-3 md:gap-4">
+              {/* Perfectly Circular Logo Badge Container */}
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-black flex items-center justify-center border-2 border-white/10 shadow-lg overflow-hidden shrink-0">
+                <OfficialXplosiveEmblem className="w-11 h-11 md:w-12 md:h-12" />
+              </div>
+              
+              {/* Slightly Smaller Sleek Font Title */}
+              <div className="flex items-center gap-1.5 md:gap-2">
+                <span className="text-lg md:text-xl font-extrabold tracking-wider text-white uppercase">
+                  XPLOSIVE
+                </span>
+                <span className="text-lg md:text-xl font-extrabold tracking-wider text-[#e9222a] uppercase">
+                  FITNESS
+                </span>
+              </div>
+            </div>
+
+            <nav className="border border-white/20 rounded-full px-4 py-2 text-xs tracking-widest uppercase text-white/70 font-medium">
+              Gulshan-e-Maymar,Karachi,Pakistan
+            </nav>
+          </header>
+
+          {/* Hero Section */}
+          <section className="relative z-10 text-center py-6 md:py-10">
+            <div className="eyebrow">What We Offer</div>
+            <h1 className="hero-heading">Services</h1>
+            <p className="max-w-md mx-auto mt-3 text-white/60 font-light text-sm md:text-base leading-relaxed">
+              Explore our 14 gym services designed to take your workout experience to the next level.
+            </p>
+          </section>
+
+          {/* Feature Carousel */}
+          <FeatureCarousel />
+
+          {/* Bottom CTA Button */}
+          <div className="relative z-10 flex justify-center mt-8 mb-12">
+            <a 
+              className="cta-btn" 
+              href="https://wa.me/923162603591?text=Hi%20Xplosive%20Fitness%2C%20I%27d%20like%20to%20know%20more%20about%20your%20services." 
+              target="_blank" 
+              rel="noreferrer"
+            >
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M17.6 6.32A8.86 8.86 0 0 0 12.05 3.6a8.94 8.94 0 0 0-7.7 13.44L3 21l4.08-1.32a8.9 8.9 0 0 0 4.97 1.5h.01a8.94 8.94 0 0 0 8.9-8.94 8.9 8.9 0 0 0-3.36-6.92zM12.06 19.4a7.4 7.4 0 0 1-3.79-1.04l-.27-.16-2.42.78.79-2.36-.18-.28a7.44 7.44 0 1 1 13.83-3.9 7.4 7.4 0 0 1-7.96 6.96zm4.08-5.56c-.22-.11-1.32-.65-1.53-.72-.2-.08-.35-.11-.5.11-.15.22-.58.72-.71.87-.13.15-.26.17-.48.06a6.06 6.06 0 0 1-1.79-1.1 6.7 6.7 0 0 1-1.24-1.54c-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.2-.68-1.65-.18-.43-.36-.37-.5-.38h-.43c-.15 0-.39.06-.59.28-.2.22-.78.76-.78 1.85 0 1.09.8 2.14.91 2.29.11.15 1.57 2.4 3.8 3.36.53.23.94.36 1.27.47.53.17 1.02.14 1.4.09.43-.06 1.32-.54 1.5-1.06.19-.52.19-.97.13-1.06-.05-.1-.2-.15-.42-.26z"/>
+              </svg>
+              Ask about a service
+            </a>
+          </div>
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
