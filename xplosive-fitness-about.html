@@ -42,24 +42,50 @@
   header{
     position:relative;z-index:5;
     display:flex;align-items:center;justify-content:space-between;
-    gap:.75rem;
+    gap:clamp(.35rem,2vw,.75rem);
     padding:clamp(1.2rem,3vw,2rem) 0;
   }
-  .brand{display:flex;align-items:center;gap:.7rem;flex-shrink:0;}
-  .brand img{height:clamp(32px,5vw,52px);width:auto;display:block;}
+  .brand{display:flex;align-items:center;gap:.7rem;flex-shrink:0;min-width:0;}
+  .brand img{height:clamp(32px,5vw,52px);width:auto;display:block;flex-shrink:0;}
   .brand span{
     font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-    font-size:clamp(.72rem,1.6vw,1.1rem);
+    font-size:clamp(.85rem,1.6vw,1.1rem);
     white-space:nowrap;
   }
   .brand span b{color:var(--red);}
   nav.pill{
     border:1.5px solid var(--line);border-radius:999px;
-    padding:.5rem 1.1rem;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:.5rem 1.1rem;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
     color:var(--ink-muted);
     white-space:nowrap;
     flex-shrink:1;
     min-width:0;
+  }
+
+  /* Below ~640px there just isn't room for the full wordmark next to the
+     location pill without shrinking the pill's text into illegibility.
+     So on phones we keep the logo mark only and give the pill a fixed,
+     comfortable size that reliably fits on one line. */
+  @media (max-width:640px){
+    header{gap:.5rem;}
+    .brand{gap:0;}
+    .brand img{height:36px;}
+    .brand span{display:none;}
+    nav.pill{
+      font-size:.66rem;
+      letter-spacing:.055em;
+      padding:.45rem .85rem;
+    }
+  }
+  @media (max-width:340px){
+    nav.pill{
+      font-size:.58rem;
+      letter-spacing:.03em;
+      padding:.4rem .7rem;
+    }
   }
 
   /* ---------- hero ---------- */
@@ -153,18 +179,6 @@
     .card{grid-template-columns:1fr;}
     .card .num{font-size:2.4rem;}
     .track:last-child{height:170vh;}
-  }
-
-  @media (max-width:480px){
-    header{gap:.5rem;}
-    .brand{gap:.5rem;}
-    .brand img{height:30px;}
-    .brand span{font-size:.66rem;letter-spacing:.04em;}
-    nav.pill{
-      font-size:.55rem;
-      padding:.42rem .65rem;
-      letter-spacing:.05em;
-    }
   }
 
   /* ---------- CTA / footer ---------- */
